@@ -32,7 +32,9 @@ process ASCAT {
 
     script:
     def args           = task.ext.args        ?: ''
-    def prefix         = task.ext.prefix      ?: "${meta.id}"
+    def prefix         = task.ext.prefix[0]   ?: "${meta.id}"
+    def prefix2        = task.ext.prefix[1]   ?: "${meta.id}"
+    print prefix2
     def gender         = args.gender          ?  "$args.gender" :        "NULL"
     def genomeVersion  = args.genomeVersion   ?  "$args.genomeVersion" : "NULL"
     def purity         = args.purity          ?  "$args.purity" :        "NULL"
@@ -66,8 +68,8 @@ process ASCAT {
     ascat.prepareHTS(
         tumourseqfile = "$input_tumor",
         normalseqfile = "$input_normal",
-        tumourname = paste0("$prefix", ".tumour"),
-        normalname = paste0("$prefix", ".normal"),
+        tumourname = "$prefix", #paste0("$prefix", ".tumour")
+        normalname = "$prefix2", # paste0("$prefix2", ".normal")
         allelecounter_exe = "alleleCounter",
         alleles.prefix = allele_prefix,
         loci.prefix = loci_prefix,
@@ -87,10 +89,10 @@ process ASCAT {
 
     #Load the data
     ascat.bc = ascat.loadData(
-        Tumor_LogR_file = paste0("$prefix", ".tumour_tumourLogR.txt"),
-        Tumor_BAF_file = paste0("$prefix", ".tumour_tumourBAF.txt"),
-        Germline_LogR_file = paste0("$prefix", ".tumour_normalLogR.txt"),
-        Germline_BAF_file = paste0("$prefix", ".tumour_normalBAF.txt"),
+        Tumor_LogR_file = paste0("$prefix", "_tumourLogR.txt"),
+        Tumor_BAF_file = paste0("$prefix", "_tumourBAF.txt"),
+        Germline_LogR_file = paste0("$prefix", "_normalLogR.txt"),
+        Germline_BAF_file = paste0("$prefix", "_normalBAF.txt"),
         genomeVersion = "$genomeVersion",
         gender = "$gender"
     )
@@ -189,10 +191,11 @@ process ASCAT {
     echo stub > ${prefix}.tumour_tumourBAF.txt
     echo stub > ${prefix}.tumour_tumourLogR.txt
 
-    echo "${task.process}:" > versions.yml
-    echo ' alleleCounter: 4.3.0' >> versions.yml
-    echo ' ascat: 3.0.0' >> versions.yml
-
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        alleleCounter: \$(alleleCounter --version)
+        ascat:  \$(Rscript -e "suppressWarnings(suppressMessages(library(ASCAT, quietly=TRUE))); print(sessionInfo()\$otherPkgs\$ASCAT\$Version); " | sed 's/"//g' )
+    END_VERSIONS
     """
 
 
