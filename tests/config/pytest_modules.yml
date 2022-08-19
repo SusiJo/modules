@@ -911,6 +911,10 @@ gatk4/leftalignandtrimvariants:
   - modules/gatk4/leftalignandtrimvariants/**
   - tests/modules/gatk4/leftalignandtrimvariants/**
 
+gatk4/liftovervcf:
+  - modules/gatk4/liftovervcf/**
+  - tests/modules/gatk4/liftovervcf/**
+
 gatk4/markduplicates:
   - modules/gatk4/markduplicates/**
   - tests/modules/gatk4/markduplicates/**
@@ -2223,10 +2227,6 @@ trimmomatic:
   - modules/trimmomatic/**
   - tests/modules/trimmomatic/**
 
-ucsc/bedtobigbed:
-  - modules/ucsc/bedtobigbed/**
-  - tests/modules/ucsc/bedtobigbed/**
-
 ucsc/bedclip:
   - modules/ucsc/bedclip/**
   - tests/modules/ucsc/bedclip/**
@@ -2234,6 +2234,10 @@ ucsc/bedclip:
 ucsc/bedgraphtobigwig:
   - modules/ucsc/bedgraphtobigwig/**
   - tests/modules/ucsc/bedgraphtobigwig/**
+
+ucsc/bedtobigbed:
+  - modules/ucsc/bedtobigbed/**
+  - tests/modules/ucsc/bedtobigbed/**
 
 ucsc/bigwigaverageoverbed:
   - modules/ucsc/bigwigaverageoverbed/**
